@@ -62,8 +62,13 @@ quizItem.querySelector("h3").textContent = item.pergunta
 
 for(let resposta of item.respostas){
 const dt = quizItem.querySelector('dl dt').cloneNode(true) 
+const input = dt.querySelector('input')
 dt.querySelector('span').textContent = resposta
-
+input.setAttribute('name', "pergunta-" + perguntas.indexOf(item))
+input.value = item.respostas.indexOf(resposta)
+input.onchange = (event) => {
+const respostaCorreta = 
+}
 quizItem.querySelector("dl").appendChild(dt)
 }
 
