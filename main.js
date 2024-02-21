@@ -12,8 +12,8 @@ const perguntas = [
   },
   {
     pergunta: "Quantos títulos brasileiros o Corinthians possui?",
-    respostas: ["6", "7", "8"],
-    correta: 2,
+    respostas: ["7", "6", "8"],
+    correta: 0,
   },
   {
     pergunta: "Qual clube é chamado de 'Galo'?",
@@ -22,8 +22,8 @@ const perguntas = [
   },
   {
     pergunta: "Quantas vezes o Santos FC foi campeão brasileiro?",
-    respostas: ["7", "8", "9"],
-    correta: 2,
+    respostas: ["7", "9", "8"],
+    correta: 1,
   },
   {
     pergunta:
@@ -53,25 +53,46 @@ const perguntas = [
   },
 ];
 
+const corretas = new Set();
+const Resultado = document.getElementById("Resultado");
+
 const quiz = document.querySelector("#quiz");
 const template = document.querySelector("template");
+const btnVerResultado = document.querySelector("#btnResult");
+const resultado = document.querySelector("#Resultado");
 
 for (const item of perguntas) {
   const quizItem = template.content.cloneNode(true);
-quizItem.querySelector("h3").textContent = item.pergunta
+  quizItem.querySelector("h3").textContent = item.pergunta;
 
-for(let resposta of item.respostas){
-const dt = quizItem.querySelector('dl dt').cloneNode(true) 
-const input = dt.querySelector('input')
-dt.querySelector('span').textContent = resposta
-input.setAttribute('name', "pergunta-" + perguntas.indexOf(item))
-input.value = item.respostas.indexOf(resposta)
-input.onchange = (event) => {
-const respostaCorreta = 
-}
-quizItem.querySelector("dl").appendChild(dt)
+  for (let resposta of item.respostas) {
+    const dt = quizItem.querySelector("dl dt").cloneNode(true);
+    const input = dt.querySelector("input");
+    dt.querySelector("span").textContent = resposta;
+    input.setAttribute("name", "pergunta-" + perguntas.indexOf(item));
+    input.value = item.respostas.indexOf(resposta);
+
+    input.onchange = (event) => {
+      var respostaCorreta = event.target.value == item.correta;
+      corretas.delete(item);
+      if (respostaCorreta) {
+        corretas.add(item);
+      }
+    };
+
+    quizItem.querySelector("dl").appendChild(dt);
+  }
+
+  quizItem.querySelector("dl dt").remove();
+  quiz.appendChild(quizItem);
 }
 
-quizItem.querySelector("dl dt").remove()
-quiz.appendChild(quizItem);
+btnVerResultado.addEventListener("click", mostrarResult);
+
+function mostrarResult() {
+  console.log(corretas.size);
+  Resultado.classList.remove("hide");
+  Resultado.querySelector(
+    "span"
+  ).textContent = `Você acertou ${corretas.size} de 10`;
 }
